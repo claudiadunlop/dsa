@@ -2,6 +2,7 @@
 
 from dsa.stacks_queues.base import Stack
 from typing import TypeVar
+import ctypes
 
 T = TypeVar('T')
 
@@ -24,3 +25,6 @@ class ArrayStack(Stack[T]):
 
     def __len__(self) -> int:
         raise NotImplementedError
+
+    def _make_array(self,c):
+        return (c * ctypes.py_object) ()

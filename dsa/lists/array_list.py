@@ -2,6 +2,7 @@
 
 from dsa.lists.base import Sequence
 from typing import TypeVar, Iterator
+import ctypes
 
 T = TypeVar('T')
 
@@ -16,7 +17,9 @@ class ArrayList(Sequence[T]):
 
     def __init__(self):
         """Create an empty array list."""
-        raise NotImplementedError
+        self._n = 0
+        self._capacity = 1
+        self._A = self._make_array(self._capacity)
 
     def __getitem__(self, index: int) -> T:
         raise NotImplementedError
@@ -35,3 +38,6 @@ class ArrayList(Sequence[T]):
 
     def __iter__(self) -> Iterator[T]:
         raise NotImplementedError
+
+    def _make_array(self,c):
+        return (c * ctypes.py_object) ()

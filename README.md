@@ -51,7 +51,52 @@ pytest -v --tb=short
 If the instructor pushes updates to the template:
 
 ```bash
-git remote add upstream <template-repo-url>
+# First time only: add the template as a remote
+git remote add upstream https://github.com/UMT-CSCI232/dsa.git
+
+# Fetch and merge updates
 git fetch upstream
-git merge upstream/main
+git merge upstream/main --allow-unrelated-histories
 ```
+
+### Resolving Merge Conflicts
+
+If you've already implemented methods in a file that the instructor updated, Git may report a merge conflict. This is normal and usually easy to resolve.
+
+**Recommended approach:**
+
+1. Use the `-X ours` flag to automatically keep your implementations:
+   ```bash
+   git merge upstream/main --allow-unrelated-histories -X ours
+   ```
+
+2. Check the announcement or commit message for what was added (e.g., a new method stub).
+
+3. Manually copy any new method stubs into your file. The instructor will provide the specific code to add.
+
+4. Stage and commit:
+   ```bash
+   git add .
+   git commit -m "Merged upstream updates"
+   ```
+
+**If you need to resolve conflicts manually:**
+
+1. Open the conflicted file and look for conflict markers:
+   ```
+   <<<<<<< HEAD
+   (your code)
+   =======
+   (upstream code)
+   >>>>>>> upstream/main
+   ```
+
+2. Edit the file to keep your implementations AND any new additions from upstream.
+
+3. Remove all conflict markers (`<<<<<<<`, `=======`, `>>>>>>>`).
+
+4. Stage and commit:
+   ```bash
+   git add <filename>
+   git commit -m "Resolved merge conflict"
+   ```
