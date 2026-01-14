@@ -28,6 +28,10 @@ class LinkedList(Sequence[T]):
         """Create an empty linked list."""
         raise NotImplementedError
 
+    def append(self, value: T) -> None:
+
+        raise NotImplementedError
+
     def __getitem__(self, index: int) -> T:
         raise NotImplementedError
 
