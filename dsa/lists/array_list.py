@@ -9,7 +9,7 @@ T = TypeVar('T')
 class ArrayList(Sequence[T]):
     """Sequence implementation using a dynamic array.
 
-    Uses a Python list as the underlying storage. Provides O(1) random
+    *Must* use ctypes array as the underlying storage! Provides O(1) random
     access and O(1) amortized append, but O(n) insertion and deletion
     at arbitrary positions.
     """
