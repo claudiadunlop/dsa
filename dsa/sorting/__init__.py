@@ -7,5 +7,5 @@ from dsa.sorting.heap_sort import heap_sort
 
 __all__ = [
     'insertion_sort', 'selection_sort', 'bubble_sort',
-    'merge_sort', 'quick_sort', 'heap_sort'
+    'merge_sort', 'quick_sort', 'heap_sort',
 ]

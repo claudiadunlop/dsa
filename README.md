@@ -13,6 +13,7 @@ dsa/
 ├── trees/              # Binary trees and traversals
 ├── priority_queues/    # Heap-based priority queue
 ├── maps/               # Hash maps and tree-based maps
+├── search/             # Binary search algorithms
 ├── sorting/            # Sorting algorithms
 └── graphs/             # Graph representations and algorithms
 ```
