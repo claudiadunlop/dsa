@@ -1,0 +1,9 @@
+Metadata-Version: 2.4
+Name: dsa
+Version: 0.1.0
+Summary: Data Structures and Algorithms course implementations
+Requires-Python: >=3.10
+License-File: LICENSE
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0; extra == "dev"
+Dynamic: license-file
