@@ -160,28 +160,16 @@ class Tree(ABC, Generic[T]):
         Returns:
             The height of the subtree rooted at p.
         """
-        if p is None:
-            p = self.root()
-        if p is None:
-            return -1
-        if self.is_leaf(p):
-            return 0
-        return 1 + max(self.height(c) for c in self.children(p))
+        raise NotImplementedError
+
 
     def __iter__(self) -> Iterator[T]:
         """Generate an iteration of the tree's elements.
 
         Default implementation performs a preorder traversal.
         """
-        for p in self.positions():
+        for p in self.preorder():
             yield p.element()
-
-    def positions(self) -> Iterator[Position]:
-        """Generate an iteration of all positions in the tree.
-
-        Default implementation performs a preorder traversal.
-        """
-        return self.preorder()
 
     def preorder(self) -> Iterator[Position]:
         """Generate a preorder iteration of positions in the tree."""
@@ -196,14 +184,7 @@ class Tree(ABC, Generic[T]):
 
     def postorder(self) -> Iterator[Position]:
         """Generate a postorder iteration of positions in the tree."""
-        if not self.is_empty():
-            yield from self._subtree_postorder(self.root())
-
-    def _subtree_postorder(self, p: Position) -> Iterator[Position]:
-        """Generate a postorder iteration of positions in subtree rooted at p."""
-        for c in self.children(p):
-            yield from self._subtree_postorder(c)
-        yield p
+        raise NotImplementedError
 
     def levelorder(self) -> Iterator[Position]:
         """Generate a breadth-first (level-order) iteration of positions.
@@ -211,15 +192,8 @@ class Tree(ABC, Generic[T]):
         Visits all nodes at depth 0 (root), then depth 1, then depth 2, etc.
         Uses a queue to track nodes to visit.
         """
-        if not self.is_empty():
-            from collections import deque
-            queue = deque()
-            queue.append(self.root())
-            while queue:
-                p = queue.popleft()
-                yield p
-                for c in self.children(p):
-                    queue.append(c)
+        raise NotImplementedError
+
 
 
 class BinaryTree(Tree[T]):
@@ -300,22 +274,18 @@ class BinaryTree(Tree[T]):
             count += 1
         return count
 
+
+    def __iter__(self) -> Iterator[T]:
+        """Generate an iteration of the tree's elements.
+
+        Default implementation performs an inorder traversal.
+        """
+        for p in self.inorder():
+            yield p.element()
+
+
     def inorder(self) -> Iterator[Tree.Position]:
         """Generate an inorder iteration of positions in the tree."""
-        if not self.is_empty():
-            yield from self._subtree_inorder(self.root())
+        raise NotImplementedError
 
-    def _subtree_inorder(self, p: Tree.Position) -> Iterator[Tree.Position]:
-        """Generate an inorder iteration of positions in subtree rooted at p."""
-        if self.left(p) is not None:
-            yield from self._subtree_inorder(self.left(p))
-        yield p
-        if self.right(p) is not None:
-            yield from self._subtree_inorder(self.right(p))
 
-    def positions(self) -> Iterator[Tree.Position]:
-        """Generate an iteration of all positions using inorder traversal.
-
-        Inorder is the natural default for binary trees.
-        """
-        return self.inorder()
