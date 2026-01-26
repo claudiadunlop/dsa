@@ -1,8 +1,17 @@
-"""Tree traversal algorithms."""
+"""Tree traversal algorithms.
+
+This module provides convenience functions that yield elements (rather than
+positions) during traversal. These are thin wrappers around the traversal
+methods defined on the Tree and BinaryTree base classes.
+
+For more control (e.g., access to positions), use the tree's methods directly:
+    for p in tree.preorder():
+        element = p.element()
+        # ...
+"""
 
 from dsa.trees.base import Tree, BinaryTree
-from typing import TypeVar, Iterator, List, Callable, Optional
-from dsa.stacks_queues.base import Queue
+from typing import TypeVar, Iterator
 
 T = TypeVar('T')
 
@@ -19,7 +28,8 @@ def preorder(tree: Tree[T]) -> Iterator[T]:
     Yields:
         Elements in preorder.
     """
-    raise NotImplementedError
+    for p in tree.preorder():
+        yield p.element()
 
 
 def postorder(tree: Tree[T]) -> Iterator[T]:
@@ -34,7 +44,8 @@ def postorder(tree: Tree[T]) -> Iterator[T]:
     Yields:
         Elements in postorder.
     """
-    raise NotImplementedError
+    for p in tree.postorder():
+        yield p.element()
 
 
 def inorder(tree: BinaryTree[T]) -> Iterator[T]:
@@ -49,7 +60,8 @@ def inorder(tree: BinaryTree[T]) -> Iterator[T]:
     Yields:
         Elements in inorder.
     """
-    raise NotImplementedError
+    for p in tree.inorder():
+        yield p.element()
 
 
 def levelorder(tree: Tree[T]) -> Iterator[T]:
@@ -64,4 +76,5 @@ def levelorder(tree: Tree[T]) -> Iterator[T]:
     Yields:
         Elements in level order.
     """
-    raise NotImplementedError
+    for p in tree.levelorder():
+        yield p.element()

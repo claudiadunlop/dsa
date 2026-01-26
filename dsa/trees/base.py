@@ -205,6 +205,22 @@ class Tree(ABC, Generic[T]):
             yield from self._subtree_postorder(c)
         yield p
 
+    def levelorder(self) -> Iterator[Position]:
+        """Generate a breadth-first (level-order) iteration of positions.
+
+        Visits all nodes at depth 0 (root), then depth 1, then depth 2, etc.
+        Uses a queue to track nodes to visit.
+        """
+        if not self.is_empty():
+            from collections import deque
+            queue = deque()
+            queue.append(self.root())
+            while queue:
+                p = queue.popleft()
+                yield p
+                for c in self.children(p):
+                    queue.append(c)
+
 
 class BinaryTree(Tree[T]):
     """Abstract base class for a binary tree structure.
