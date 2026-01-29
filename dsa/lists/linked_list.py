@@ -28,47 +28,72 @@ class LinkedList(Sequence[T]):
         """Create an empty linked list."""
         self._head = None
         self._n = 0
-        self._tail = None
         #raise NotImplementedError
 
     def append(self, value: T) -> None:
         if self._n == 0:
-            self._head = self._Node(value, next = None)
+            self._head = self._Node(value, prev = None, next = None)
         else:
             current_node = self._head
             while current_node._next is not None:
                 current_node = current_node._next
-            current_node._next = self._Node(value)
+            current_node._next = self._Node(value, self._head, None)
         self._n += 1
         #raise NotImplementedError
 
     def __getitem__(self, index: int) -> T:
+        if not 0 <= index < self._n:
+            raise IndexError
         current_node = self._head
         for i in range(index):
             current_node = current_node._next
-        return current_node
+        return current_node._element
         #raise NotImplementedError
 
     def __setitem__(self, index: int, value: T) -> None:
+        if not 0 <= index < self._n:
+            raise IndexError
         current_node = self._head
         for i in range(index):
             current_node = current_node._next
-        current_node = value
-        return current_node
+        current_node._element = value
         #raise NotImplementedError
 
     def __delitem__(self, index: int) -> None:
+        if not 0 <= index <= self._n:
+            raise IndexError
         current_node = self._head
         for i in range(index):
             current_node = current_node._next
-        current_node = None
+        if current_node._prev == None:
+            current_node._next._prev = None
+            self._head = current_node._next
+        elif current_node._next == None:
+            current_node._prev._next = None
+        else:
+            current_node._next._prev = current_node._prev
+            current_node._prev._next = current_node._next
         self._n -= 1
         #raise NotImplementedError
 
     def insert(self, index: int, value: T) -> None:
+        if not 0 <= index <= self._n:
+            raise IndexError
         current_node = self._head
-    
-        raise NotImplementedError
+        if index == 0:
+            new_node = self._Node(value, prev = None, next = current_node)
+            current_node._prev = new_node
+            self._head = new_node
+            self._n += 1
+            return
+        for i in range(index-1):
+            current_node = current_node._next
+        new_node = self._Node(value, prev = current_node, next = current_node._next)
+        current_node._next = new_node
+        if new_node._next is not None:
+            new_node._next._prev = new_node
+        self._n += 1
+        #raise NotImplementedError
 
     def __len__(self) -> int:
         return self._n
