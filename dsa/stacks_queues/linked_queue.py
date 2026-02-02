@@ -22,17 +22,37 @@ class LinkedQueue(Queue[T]):
             self._next = next
 
     def __init__(self):
-        """Create an empty queue."""
-        raise NotImplementedError
+        self._head = None
+        self._n = 0
+        #raise NotImplementedError
 
     def enqueue(self, item: T) -> None:
-        raise NotImplementedError
+        if self._n == 0:
+            self._head = self._Node(item, next = None)
+        else:
+            current_node = self._head
+            while current_node._next is not None:
+                    current_node = current_node._next
+            current_node._next = self._Node(item, None)
+        self._n += 1
+        #raise NotImplementedError
 
     def dequeue(self) -> T:
-        raise NotImplementedError
+        if self._n == 0:
+            raise IndexError
+        value = self._head._element
+        self._head = self._head._next
+        self._n -= 1
+        return value
+        #raise NotImplementedError
 
     def front(self) -> T:
-        raise NotImplementedError
+        if self._n == 0:
+            raise IndexError
+        return self._head._element
+        #raise NotImplementedError
 
     def __len__(self) -> int:
-        raise NotImplementedError
+        return self._n
+        #raise NotImplementedError
+ 
