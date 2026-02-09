@@ -22,7 +22,23 @@ def binary_search(data: List[T], target: T) -> Optional[int]:
     Returns:
         The index of target if found, None otherwise.
     """
-    raise NotImplementedError
+    middle = len(data)//2
+    low = 0
+    high = len(data) - 1
+
+    while low <= high:
+        
+        middle = (low + high) // 2
+
+        if data[middle] == target:
+            return middle
+        elif data[middle] < target:
+            low = middle + 1
+        else:
+            high = middle - 1
+
+
+    #raise NotImplementedError
 
 
 def binary_search_recursive(data: List[T], target: T) -> Optional[int]:
@@ -40,7 +56,17 @@ def binary_search_recursive(data: List[T], target: T) -> Optional[int]:
     Returns:
         The index of target if found, None otherwise.
     """
-    raise NotImplementedError
+    low = 0
+    high = len(data) - 1
+   
+    if low > high:
+        return None
+    if low == high and data[low] != target:
+        return None
+    
+    return _binary_search_helper(data, target, low, high)
+    
+    #raise NotImplementedError
 
 
 def _binary_search_helper(data: List[T], target: T, low: int, high: int) -> Optional[int]:
@@ -55,7 +81,20 @@ def _binary_search_helper(data: List[T], target: T, low: int, high: int) -> Opti
     Returns:
         The index of target if found, None otherwise.
     """
-    raise NotImplementedError
+    middle = (low + high) // 2
+
+    if data[middle] == target:
+        return middle
+    elif data[middle] < target:
+        low = middle + 1
+    elif data[middle] > target:
+        high = middle - 1
+    
+    if low == high and data[low] != target:
+        return None
+    
+    return _binary_search_helper(data, target, low, high)       
+    #raise NotImplementedError
 
 
 def bisect_left(data: List[T], target: T) -> int:
@@ -75,7 +114,21 @@ def bisect_left(data: List[T], target: T) -> int:
     Returns:
         The leftmost index where target can be inserted.
     """
-    raise NotImplementedError
+    low = 0
+    high = len(data)
+
+    while low < high:
+        
+        middle = (low + high) // 2
+
+        if data[middle] < target:
+            low = middle + 1
+        else:
+            high = middle
+
+    return low
+    
+    #raise NotImplementedError
 
 
 def bisect_right(data: List[T], target: T) -> int:
@@ -95,4 +148,20 @@ def bisect_right(data: List[T], target: T) -> int:
     Returns:
         The rightmost index where target can be inserted.
     """
-    raise NotImplementedError
+    
+    low = 0
+    high = len(data)
+
+    while low < high:
+        
+        middle = (low + high) // 2
+
+        if data[middle] > target:
+            high = middle
+        else:
+            low = middle + 1
+
+    return high
+    
+
+    #raise NotImplementedError
