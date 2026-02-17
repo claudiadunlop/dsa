@@ -2,7 +2,7 @@
 
 from dsa.trees.base import Tree, BinaryTree
 from typing import TypeVar, Iterator, List, Callable, Optional
-from dsa.stacks_queues.base import Queue
+from dsa.stacks_queues.array_queue import ArrayQueue
 
 T = TypeVar('T')
 
@@ -19,7 +19,14 @@ def preorder(tree: Tree[T]) -> Iterator[T]:
     Yields:
         Elements in preorder.
     """
-    raise NotImplementedError
+    def _subtree_preorder(p):
+        yield p.element()
+        for c in tree.children(p):
+            yield from _subtree_preorder(c)
+
+    if not tree.is_empty():
+        yield from _subtree_preorder(tree.root())
+    #raise NotImplementedError
 
 
 def postorder(tree: Tree[T]) -> Iterator[T]:
@@ -34,7 +41,14 @@ def postorder(tree: Tree[T]) -> Iterator[T]:
     Yields:
         Elements in postorder.
     """
-    raise NotImplementedError
+    def _subtree_postorder(p):
+        for c in tree.children(p):
+            yield from _subtree_postorder(c)
+        yield p.element()
+
+    if not tree.is_empty():
+        yield from _subtree_postorder(tree.root())
+    #raise NotImplementedError
 
 
 def inorder(tree: BinaryTree[T]) -> Iterator[T]:
@@ -49,7 +63,18 @@ def inorder(tree: BinaryTree[T]) -> Iterator[T]:
     Yields:
         Elements in inorder.
     """
-    raise NotImplementedError
+    def _subtree_inorder(p):
+        if tree.left(p) is not None:
+            yield from _subtree_inorder(tree.left(p))
+
+        yield p.element()
+
+        if tree.right(p) is not None:
+            yield from _subtree_inorder(tree.right(p))
+
+    if not tree.is_empty():
+        yield from _subtree_inorder(tree.root())
+    #raise NotImplementedError
 
 
 def levelorder(tree: Tree[T]) -> Iterator[T]:
@@ -64,4 +89,15 @@ def levelorder(tree: Tree[T]) -> Iterator[T]:
     Yields:
         Elements in level order.
     """
-    raise NotImplementedError
+    if not tree.is_empty():
+        fringe = ArrayQueue()
+        fringe.enqueue(tree.root())
+
+        while not fringe.is_empty():
+            p = fringe.dequeue()
+            yield p.element()
+
+            for c in tree.children(p):
+                fringe.enqueue(c)
+
+    #raise NotImplementedError
