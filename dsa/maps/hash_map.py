@@ -99,5 +99,5 @@ class HashMap(Map[K, V]):
         for i in range(self._table):
             new_table[i] = self._table[i]
         self._table = new_table
-        self._capactiy *= 2
+        self._capacity = new_capacity
         #raise NotImplementedError
