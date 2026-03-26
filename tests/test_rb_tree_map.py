@@ -29,18 +29,6 @@ class TestRBTreeMap:
         with pytest.raises(KeyError):
             _ = m[5]
 
-    def test_delitem(self):
-        m = RBTreeMap()
-        m[5] = "five"
-        del m[5]
-        assert 5 not in m
-        assert len(m) == 0
-
-    def test_delitem_missing_raises(self):
-        m = RBTreeMap()
-        with pytest.raises(KeyError):
-            del m[5]
-
     def test_contains(self):
         m = RBTreeMap()
         m[5] = "five"
@@ -72,39 +60,6 @@ class TestRBTreeMap:
             m[i] = str(i)
         assert len(m) == 100
         assert list(m) == list(range(100))
-
-    def test_delete_maintains_balance(self):
-        """Deletion should maintain red-black properties."""
-        m = RBTreeMap()
-        for i in range(50):
-            m[i] = str(i)
-        for i in range(25):
-            del m[i]
-        assert len(m) == 25
-        assert list(m) == list(range(25, 50))
-
-    def test_many_operations(self):
-        """Test many insertions and deletions."""
-        m = RBTreeMap()
-        import random
-        values = list(range(100))
-        random.shuffle(values)
-
-        # Insert all
-        for v in values:
-            m[v] = str(v)
-        assert len(m) == 100
-
-        # Delete half
-        random.shuffle(values)
-        for v in values[:50]:
-            del m[v]
-        assert len(m) == 50
-
-        # Verify remaining
-        remaining = set(values[50:])
-        for key in m:
-            assert key in remaining
 
     def test_keys_values_items(self):
         m = RBTreeMap()

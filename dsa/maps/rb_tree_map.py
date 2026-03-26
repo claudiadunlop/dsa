@@ -10,13 +10,14 @@ V = TypeVar('V')
 class RBTreeMap(Map[K, V]):
     """Map implementation using a red-black tree.
 
-    A red-black tree is a self-balancing binary search tree where each
+    A left-leaning red-black tree is a self-balancing binary search tree where each
     node has a color (red or black) and the tree maintains the following
     properties:
         1. Every node is either red or black
         2. The root is black
-        3. All leaves (None) are black
-        4. If a node is red, both its children are black
+        3. All red links lean left
+        4. We cannot have two red links in a row
+        5. A node may not have two red links as children
         5. All paths from a node to descendant leaves contain the same
            number of black nodes
 
@@ -52,9 +53,6 @@ class RBTreeMap(Map[K, V]):
     def __setitem__(self, key: K, value: V) -> None:
         raise NotImplementedError
 
-    def __delitem__(self, key: K) -> None:
-        raise NotImplementedError
-
     def __contains__(self, key: K) -> bool:
         raise NotImplementedError
 
@@ -75,8 +73,4 @@ class RBTreeMap(Map[K, V]):
 
     def _fix_insert(self, node: _Node) -> None:
         """Restore red-black properties after insertion."""
-        raise NotImplementedError
-
-    def _fix_delete(self, node: Optional[_Node], parent: Optional[_Node]) -> None:
-        """Restore red-black properties after deletion."""
         raise NotImplementedError
