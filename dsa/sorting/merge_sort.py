@@ -19,7 +19,16 @@ def merge_sort(data: List[T]) -> None:
     Args:
         data: The list to sort in place.
     """
-    raise NotImplementedError
+    blockSize = 1
+    while blockSize < len(data):
+        for i in range(0, len(data), 2 * blockSize):
+            mid = min(i + blockSize-1, len(data)-1)
+            right = min(i+2 *blockSize-1, len(data) - 1)
+            _merge(data, i, mid, right)
+        blockSize *= 2
+    return data
+
+    #raise NotImplementedError
 
 
 def _merge(data: List[T], left: int, mid: int, right: int) -> None:
@@ -31,4 +40,31 @@ def _merge(data: List[T], left: int, mid: int, right: int) -> None:
         mid: Ending index of the first subarray.
         right: Ending index of the second subarray.
     """
-    raise NotImplementedError
+    i = left
+    j = mid+1
+    new_data = []
+
+    while i<= mid and j <= right:
+        if data[i] > data[j]:
+            new_data.append(data[j])
+            j += 1
+        else:
+            new_data.append(data[i])
+            i += 1
+
+    while i <= mid:
+        new_data.append(data[i])
+        i += 1
+
+    while j <= right:
+        new_data.append(data[j])
+        j += 1
+
+    for k in range(len(new_data)):
+        data[left + k] = new_data[k]
+
+    return new_data
+    
+    #raise NotImplementedError
+
+
