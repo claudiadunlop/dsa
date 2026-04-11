@@ -1,6 +1,7 @@
 """Quick sort algorithm."""
 
 from typing import TypeVar, List
+import random
 
 T = TypeVar('T')
 
@@ -19,7 +20,9 @@ def quick_sort(data: List[T]) -> None:
     Args:
         data: The list to sort in place.
     """
-    raise NotImplementedError
+    _quick_sort_range(data, 0, len(data)-1)
+
+    #raise NotImplementedError
 
 
 def _quick_sort_range(data: List[T], low: int, high: int) -> None:
@@ -30,7 +33,13 @@ def _quick_sort_range(data: List[T], low: int, high: int) -> None:
         low: Starting index of the subarray.
         high: Ending index of the subarray.
     """
-    raise NotImplementedError
+    if low >= high:
+        return
+    mid = _partition(data, low, high)
+    _quick_sort_range(data, low, mid-1)
+    _quick_sort_range(data, mid+1, high)
+
+    #raise NotImplementedError
 
 
 def _partition(data: List[T], low: int, high: int) -> int:
@@ -47,4 +56,38 @@ def _partition(data: List[T], low: int, high: int) -> int:
     Returns:
         The final index of the pivot element.
     """
-    raise NotImplementedError
+    pivot = random.randint(low, high)
+    left = low + 1
+    right = high
+    
+    temp = data[pivot]
+    data[pivot] = data[low]
+    data[low] = temp
+
+    while left <= right:
+        if data[left] > data[low] and data[right] < data[low]:
+            temp = data[left]
+            data[left] = data[right]
+            data[right] = temp
+            left += 1
+            right -= 1
+        elif data[left] > data[low]:
+            right -= 1
+        elif data[right] <= data[low]:
+            left += 1
+        else:
+            left += 1
+            right -= 1
+        
+    temp = data[low]
+    data[low] = data[right]
+    data[right] = temp
+
+    return right
+
+    #raise NotImplementedError
+
+if __name__ == "__main__":
+    data = [2, 7, 9, 11, 1, 3, 4, 8, 5, 6]
+    print(_partition(data, 0, len(data)-1))
+    print(data)
