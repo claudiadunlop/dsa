@@ -3,6 +3,8 @@
 from dsa.graphs.base import Graph
 from typing import TypeVar, Dict, Set, Iterator, Optional
 
+from dsa.stacks_queues import deque
+
 V = TypeVar('V')
 E = TypeVar('E')
 
@@ -20,7 +22,18 @@ def dfs(graph: Graph[V, E], start: Graph.Vertex) -> Iterator[Graph.Vertex]:
     Yields:
         Vertices in depth-first order.
     """
-    raise NotImplementedError
+    visited = set()
+
+    def _dfs(v):
+        visited.add(v)
+        yield v
+        for edge in graph.incident_edges(v):
+            u = edge.opposite(v)
+            if u not in visited:
+                yield from _dfs(u)
+
+    yield from _dfs(start)
+    #raise NotImplementedError
 
 
 def dfs_paths(graph: Graph[V, E], start: Graph.Vertex) -> Dict[Graph.Vertex, Graph.Edge]:
@@ -37,7 +50,18 @@ def dfs_paths(graph: Graph[V, E], start: Graph.Vertex) -> Dict[Graph.Vertex, Gra
     Returns:
         Dictionary mapping discovered vertices to their discovery edges.
     """
-    raise NotImplementedError
+    discovered = {}
+
+    def _dfs(v):
+        for edge in graph.incident_edges(v):
+            u = edge.opposite(v)
+            if u not in discovered and u != start:
+                discovered[u] = edge
+                _dfs(u)
+
+    _dfs(start)
+    return discovered
+    #raise NotImplementedError
 
 
 def bfs(graph: Graph[V, E], start: Graph.Vertex) -> Iterator[Graph.Vertex]:
@@ -53,7 +77,19 @@ def bfs(graph: Graph[V, E], start: Graph.Vertex) -> Iterator[Graph.Vertex]:
     Yields:
         Vertices in breadth-first order.
     """
-    raise NotImplementedError
+    from collections import deque
+    visited = {start}
+    queue = deque([start])
+
+    while queue:
+        v = queue.popleft()
+        yield v
+        for edge in graph.incident_edges(v):
+            u = edge.opposite(v)
+            if u not in visited:
+                visited.add(u)
+                queue.append(u)
+    #raise NotImplementedError
 
 
 def bfs_paths(graph: Graph[V, E], start: Graph.Vertex) -> Dict[Graph.Vertex, Graph.Edge]:
@@ -69,7 +105,23 @@ def bfs_paths(graph: Graph[V, E], start: Graph.Vertex) -> Dict[Graph.Vertex, Gra
     Returns:
         Dictionary mapping discovered vertices to their discovery edges.
     """
-    raise NotImplementedError
+    from collections import deque
+
+    discovered = {}
+    visited = {start}
+    queue = deque([start])
+
+    while queue:
+        v = queue.popleft()
+        for edge in graph.incident_edges(v):
+            u = edge.opposite(v)
+            if u not in visited:
+                visited.add(u)
+                discovered[u] = edge
+                queue.append(u)
+
+    return discovered
+    #raise NotImplementedError
 
 
 def construct_path(start: Graph.Vertex, end: Graph.Vertex,
@@ -85,4 +137,19 @@ def construct_path(start: Graph.Vertex, end: Graph.Vertex,
         List of vertices forming the path from start to end,
         or an empty list if no path exists.
     """
-    raise NotImplementedError
+    path = []
+    if end not in discovered and end != start:
+        return []
+
+    current = end
+    path.append(current)
+
+    while current != start:
+        edge = discovered[current]
+        parent = edge.opposite(current)
+        current = parent
+        path.append(current)
+
+    path.reverse()
+    return path
+    #raise NotImplementedError

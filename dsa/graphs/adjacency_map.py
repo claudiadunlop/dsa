@@ -5,7 +5,7 @@ from typing import TypeVar, Iterator, Optional, Tuple
 
 V = TypeVar('V')
 E = TypeVar('E')
-
+ 
 
 class AdjacencyMapGraph(Graph[V, E]):
     """Graph implementation using an adjacency map.
@@ -25,13 +25,16 @@ class AdjacencyMapGraph(Graph[V, E]):
             self._element = element
 
         def element(self) -> V:
-            raise NotImplementedError
+            return self._element
+            #raise NotImplementedError
 
         def __eq__(self, other: object) -> bool:
-            raise NotImplementedError
+            return self is other
+            #raise NotImplementedError
 
         def __hash__(self) -> int:
-            raise NotImplementedError
+            return hash(id(self))
+            #raise NotImplementedError
 
     class _Edge(Graph.Edge):
         """Edge implementation for AdjacencyMapGraph."""
@@ -45,19 +48,24 @@ class AdjacencyMapGraph(Graph[V, E]):
             self._destination = destination
 
         def element(self) -> E:
-            raise NotImplementedError
+            return self._element
+            #raise NotImplementedError
 
         def endpoints(self) -> Tuple[Graph.Vertex, Graph.Vertex]:
-            raise NotImplementedError
+            return (self._origin, self._destination)
+            #raise NotImplementedError
 
         def opposite(self, v: Graph.Vertex) -> Graph.Vertex:
-            raise NotImplementedError
+            return self._destination if v is self._origin else self._origin
+            #raise NotImplementedError
 
         def __eq__(self, other: object) -> bool:
-            raise NotImplementedError
+            return self is other
+            #raise NotImplementedError
 
         def __hash__(self) -> int:
-            raise NotImplementedError
+            return hash( (self._origin, self._destination) )
+            #raise NotImplementedError
 
     def __init__(self, directed: bool = False):
         """Create an empty graph.
@@ -65,40 +73,79 @@ class AdjacencyMapGraph(Graph[V, E]):
         Args:
             directed: True for a directed graph, False for undirected.
         """
-        raise NotImplementedError
+        self._outgoing = {}
+        self._incoming = {} if directed else self._outgoing
+        #raise NotImplementedError
 
     def is_directed(self) -> bool:
-        raise NotImplementedError
+        return self._incoming is not self._outgoing
+        #raise NotImplementedError
 
     def vertex_count(self) -> int:
-        raise NotImplementedError
+        return len(self._outgoing)
+        #raise NotImplementedError
 
     def edge_count(self) -> int:
-        raise NotImplementedError
+        total = sum(len(self._outgoing[v]) for v in self._outgoing)
+        return total if self.is_directed() else total // 2
+        #raise NotImplementedError
 
     def vertices(self) -> Iterator[Graph.Vertex]:
-        raise NotImplementedError
+        return self._outgoing.keys()
+        #raise NotImplementedError
 
     def edges(self) -> Iterator[Graph.Edge]:
-        raise NotImplementedError
+        result = set()
+        for secondary_map in self._outgoing.values():
+            result.update(secondary_map.values())
+        return result
+        #raise NotImplementedError
 
     def get_edge(self, u: Graph.Vertex, v: Graph.Vertex) -> Optional[Graph.Edge]:
-        raise NotImplementedError
+        return self._outgoing[u].get(v)
+        #raise NotImplementedError
 
     def degree(self, v: Graph.Vertex, outgoing: bool = True) -> int:
-        raise NotImplementedError
+        adj = self._outgoing if outgoing else self._incoming
+        return len(adj[v])
+        #raise NotImplementedError
 
     def incident_edges(self, v: Graph.Vertex, outgoing: bool = True) -> Iterator[Graph.Edge]:
-        raise NotImplementedError
+        adj = self._outgoing if outgoing else self._incoming
+        for edge in adj[v].values():
+            yield edge
+        #raise NotImplementedError
 
     def insert_vertex(self, x: V = None) -> Graph.Vertex:
-        raise NotImplementedError
+        v = self._Vertex(x)
+        self._outgoing[v] = {}
+        if self.is_directed():
+            self._incoming[v] = {}
+        return v
+        #raise NotImplementedError
 
     def insert_edge(self, u: Graph.Vertex, v: Graph.Vertex, x: E = None) -> Graph.Edge:
-        raise NotImplementedError
+        e = self._Edge(u, v, x)
+        self._outgoing[u][v] = e
+        self._incoming[v][u] = e
+        return e
+        #raise NotImplementedError
 
     def remove_vertex(self, v: Graph.Vertex) -> V:
-        raise NotImplementedError
+        for u in list(self._outgoing[v]):
+            del self._incoming[u][v]
+        del self._outgoing[v]
+        if self.is_directed():
+            for u in list(self._incoming[v]):
+                del self._outgoing[u][v]
+            del self._incoming[v]
+
+        return v.element()
+        #raise NotImplementedError
 
     def remove_edge(self, e: Graph.Edge) -> E:
-        raise NotImplementedError
+        u, v = e.endpoints()
+        del self._outgoing[u][v]
+        del self._incoming[v][u]
+        return e.element()
+        #raise NotImplementedError
