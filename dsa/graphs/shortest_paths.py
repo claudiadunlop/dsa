@@ -2,6 +2,7 @@
 
 from dsa.graphs.base import Graph
 from typing import TypeVar, Dict, Tuple, Optional
+from dsa.priority_queues import heap
 
 V = TypeVar('V')
 E = TypeVar('E')
@@ -29,7 +30,34 @@ def dijkstra(graph: Graph[V, E], start: Graph.Vertex) -> Tuple[
     Raises:
         ValueError: If any edge weight is negative.
     """
-    raise NotImplementedError
+    d = {v: float('inf') for v in graph.vertices()}
+    d[start] = 0
+
+    pred: Dict[Graph.Vertex, Graph.Edge] = {}
+
+    pq = heap.Heap()
+    pq.add(0, start)
+
+    while not pq.is_empty():
+        key, u = pq.remove_min()
+
+        if key > d[u]:
+            continue
+
+        for e in graph.incident_edges(u):
+            v = e.opposite(u)
+            weight = e.element()   # <-- THIS is correct for your Graph
+
+            if weight < 0:
+                raise ValueError("Graph has negative edge weight")
+
+            if d[u] + weight < d[v]:
+                d[v] = d[u] + weight
+                pred[v] = e
+                pq.add(d[v], v)
+
+    return d, pred
+    #raise NotImplementedError
 
 
 def shortest_path(graph: Graph[V, E], start: Graph.Vertex,
@@ -46,7 +74,24 @@ def shortest_path(graph: Graph[V, E], start: Graph.Vertex,
         - distance: The total distance from start to end (float('inf') if unreachable)
         - path: List of vertices from start to end (empty if unreachable)
     """
-    raise NotImplementedError
+    d, pred = dijkstra(graph, start)
+
+    if end not in d or d[end] == float('inf'):
+        return float('inf'), []
+
+    path = []
+    current = end
+
+    while current != start:
+        path.append(current)
+        e = pred[current]
+        current = e.opposite(current)
+
+    path.append(start)
+    path.reverse()
+
+    return d[end], path
+    #raise NotImplementedError
 
 
 def bellman_ford(graph: Graph[V, E], start: Graph.Vertex) -> Tuple[
@@ -71,4 +116,31 @@ def bellman_ford(graph: Graph[V, E], start: Graph.Vertex) -> Tuple[
     Raises:
         ValueError: If a negative cycle is reachable from start.
     """
-    raise NotImplementedError
+    d = {v: float('inf') for v in graph.vertices()}
+    d[start] = 0
+
+    pred: Dict[Graph.Vertex, Graph.Edge] = {}
+
+    vertices = list(graph.vertices())
+
+    for _ in range(len(vertices) - 1):
+        for u in vertices:
+            for e in graph.incident_edges(u):
+                v = e.opposite(u)
+                weight = e.element()
+
+                if d[u] + weight < d[v]:
+                    d[v] = d[u] + weight
+                    pred[v] = e
+
+    for u in vertices:
+        for e in graph.incident_edges(u):
+            v = e.opposite(u)
+            weight = e.element()
+
+            if d[u] + weight < d[v]:
+                raise ValueError("Graph contains a negative cycle")
+
+    return d, pred
+    #raise NotImplementedError
+
