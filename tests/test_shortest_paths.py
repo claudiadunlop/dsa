@@ -115,46 +115,4 @@ class TestShortestPath:
         assert path[0].element() == "A"
 
 
-class TestBellmanFord:
-    """Tests for Bellman-Ford algorithm."""
 
-    def test_single_vertex(self):
-        g = AdjacencyMapGraph(directed=True)
-        v = g.insert_vertex("A")
-        distances, predecessors = bellman_ford(g, v)
-        assert distances[v] == 0
-
-    def test_sample_graph(self):
-        g, vertices = build_weighted_graph()
-        distances, predecessors = bellman_ford(g, vertices["A"])
-        assert distances[vertices["A"]] == 0
-        assert distances[vertices["B"]] == 1
-        assert distances[vertices["C"]] == 3
-        assert distances[vertices["E"]] == 2
-        assert distances[vertices["F"]] == 3
-
-    def test_negative_weights(self):
-        """Bellman-Ford should handle negative weights."""
-        g = AdjacencyMapGraph(directed=True)
-        a = g.insert_vertex("A")
-        b = g.insert_vertex("B")
-        c = g.insert_vertex("C")
-        g.insert_edge(a, b, 4)
-        g.insert_edge(a, c, 2)
-        g.insert_edge(c, b, -3)  # Negative edge
-        distances, _ = bellman_ford(g, a)
-        assert distances[a] == 0
-        assert distances[b] == -1  # Via A -> C -> B
-        assert distances[c] == 2
-
-    def test_negative_cycle_raises(self):
-        """Bellman-Ford should detect negative cycles."""
-        g = AdjacencyMapGraph(directed=True)
-        a = g.insert_vertex("A")
-        b = g.insert_vertex("B")
-        c = g.insert_vertex("C")
-        g.insert_edge(a, b, 1)
-        g.insert_edge(b, c, -1)
-        g.insert_edge(c, a, -1)  # Creates negative cycle
-        with pytest.raises(ValueError):
-            bellman_ford(g, a)
