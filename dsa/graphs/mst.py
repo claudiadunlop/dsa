@@ -2,6 +2,7 @@
 
 from dsa.graphs.base import Graph
 from typing import TypeVar, List, Set
+from dsa.priority_queues.heap import Heap
 
 V = TypeVar('V')
 E = TypeVar('E')
@@ -24,7 +25,22 @@ def kruskal_mst(graph: Graph[V, E]) -> List[Graph.Edge]:
     Raises:
         ValueError: If the graph is directed.
     """
-    raise NotImplementedError
+    if graph.is_directed():
+        raise ValueError
+
+    pq = Heap()
+    union = UnionFind(graph.vertices())
+    t = []
+    for e in graph.edges():
+        pq.add(e.element(), e)
+    while len(t) < graph.vertex_count() -1 and len(pq) > 0:
+        _, e = pq.remove_min()
+        u, v = e.endpoints()
+        if union.union(u, v):
+            t.append(e)
+
+    return t
+    #raise NotImplementedError
 
 class UnionFind:
     """Union-Find (Disjoint Set Union) data structure.

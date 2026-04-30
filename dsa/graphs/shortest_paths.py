@@ -46,7 +46,7 @@ def dijkstra(graph: Graph[V, E], start: Graph.Vertex) -> Tuple[
 
         for e in graph.incident_edges(u):
             v = e.opposite(u)
-            weight = e.element()   # <-- THIS is correct for your Graph
+            weight = e.element()  
 
             if weight < 0:
                 raise ValueError("Graph has negative edge weight")

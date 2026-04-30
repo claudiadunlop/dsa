@@ -2,7 +2,7 @@
 
 import pytest
 from dsa.graphs.adjacency_map import AdjacencyMapGraph
-from dsa.graphs.shortest_paths import dijkstra, shortest_path, bellman_ford
+from dsa.graphs.shortest_paths import dijkstra, shortest_path
 
 
 def build_weighted_graph():
