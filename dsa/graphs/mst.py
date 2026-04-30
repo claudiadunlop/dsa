@@ -7,26 +7,6 @@ V = TypeVar('V')
 E = TypeVar('E')
 
 
-def prim_mst(graph: Graph[V, E]) -> List[Graph.Edge]:
-    """Compute a minimum spanning tree using Prim's algorithm.
-
-    Prim's algorithm grows the MST one vertex at a time, always adding
-    the minimum-weight edge that connects a tree vertex to a non-tree vertex.
-
-    Assumes edge elements are numeric weights.
-
-    Args:
-        graph: An undirected, connected, weighted graph.
-
-    Returns:
-        List of edges forming a minimum spanning tree.
-
-    Raises:
-        ValueError: If the graph is directed.
-    """
-    raise NotImplementedError
-
-
 def kruskal_mst(graph: Graph[V, E]) -> List[Graph.Edge]:
     """Compute a minimum spanning tree using Kruskal's algorithm.
 
@@ -46,46 +26,27 @@ def kruskal_mst(graph: Graph[V, E]) -> List[Graph.Edge]:
     """
     raise NotImplementedError
 
-
 class UnionFind:
     """Union-Find (Disjoint Set Union) data structure.
-
     Supports efficient union and find operations for use in Kruskal's
     algorithm to detect cycles.
     """
-
     def __init__(self, elements):
-        """Create a Union-Find structure with each element in its own set.
-
-        Args:
-            elements: Iterable of elements to include.
-        """
-        raise NotImplementedError
+        self.parent = {x: x for x in elements}
+        self.rank = {x: 0 for x in elements}
 
     def find(self, x):
-        """Return the representative (root) of the set containing x.
-
-        Uses path compression for efficiency.
-
-        Args:
-            x: An element.
-
-        Returns:
-            The representative of x's set.
-        """
-        raise NotImplementedError
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])  # path compression
+        return self.parent[x]
 
     def union(self, x, y) -> bool:
-        """Merge the sets containing x and y.
-
-        Uses union by rank for efficiency.
-
-        Args:
-            x: An element.
-            y: An element.
-
-        Returns:
-            True if x and y were in different sets (merge occurred),
-            False if they were already in the same set.
-        """
-        raise NotImplementedError
+        rx, ry = self.find(x), self.find(y)
+        if rx == ry:
+            return False
+        if self.rank[rx] < self.rank[ry]:
+            rx, ry = ry, rx
+        self.parent[ry] = rx
+        if self.rank[rx] == self.rank[ry]:
+            self.rank[rx] += 1
+        return True
