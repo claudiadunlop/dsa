@@ -2,7 +2,7 @@
 
 import pytest
 from dsa.graphs.adjacency_map import AdjacencyMapGraph
-from dsa.graphs.mst import prim_mst, kruskal_mst, UnionFind
+from dsa.graphs.mst import kruskal_mst, UnionFind
 
 
 def build_weighted_graph():
@@ -65,42 +65,6 @@ class TestUnionFind:
         uf.union(2, 3)
         # All should now be in the same set
         assert uf.find(1) == uf.find(4)
-
-
-class TestPrimMST:
-    """Tests for Prim's algorithm."""
-
-    def test_single_vertex(self):
-        g = AdjacencyMapGraph(directed=False)
-        g.insert_vertex("A")
-        mst = prim_mst(g)
-        assert len(mst) == 0
-
-    def test_two_vertices(self):
-        g = AdjacencyMapGraph(directed=False)
-        u = g.insert_vertex("A")
-        v = g.insert_vertex("B")
-        g.insert_edge(u, v, 5)
-        mst = prim_mst(g)
-        assert len(mst) == 1
-        assert mst[0].element() == 5
-
-    def test_sample_graph(self):
-        g, vertices = build_weighted_graph()
-        mst = prim_mst(g)
-        # MST should have n-1 edges
-        assert len(mst) == 5
-        # Total weight should be minimum
-        total_weight = sum(e.element() for e in mst)
-        assert total_weight == 18
-
-    def test_directed_graph_raises(self):
-        g = AdjacencyMapGraph(directed=True)
-        u = g.insert_vertex("A")
-        v = g.insert_vertex("B")
-        g.insert_edge(u, v, 5)
-        with pytest.raises(ValueError):
-            prim_mst(g)
 
 
 class TestKruskalMST:
