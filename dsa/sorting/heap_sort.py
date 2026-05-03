@@ -18,7 +18,17 @@ def heap_sort(data: List[T]) -> None:
     Args:
         data: The list to sort in place.
     """
-    raise NotImplementedError
+    n = len(data)
+    if n < 2:
+        return
+
+    _build_max_heap(data)
+
+    for end in range(n - 1, 0, -1):
+        data[0], data[end] = data[end], data[0]
+        _heapify(data, end, 0)
+    
+    #raise NotImplementedError
 
 
 def _heapify(data: List[T], n: int, i: int) -> None:
@@ -31,7 +41,22 @@ def _heapify(data: List[T], n: int, i: int) -> None:
         n: The size of the heap (only indices 0 to n-1 are in the heap).
         i: The index of the root of the subtree to heapify.
     """
-    raise NotImplementedError
+    while True:
+        left = 2 * i + 1
+        right = 2 * i + 2
+        largest = i
+
+        if left < n and data[left] > data[largest]:
+            largest = left
+        if right < n and data[right] > data[largest]:
+            largest = right
+
+        if largest == i:
+            break
+
+        data[i], data[largest] = data[largest], data[i]
+        i = largest
+        #raise NotImplementedError
 
 
 def _build_max_heap(data: List[T]) -> None:
@@ -40,4 +65,7 @@ def _build_max_heap(data: List[T]) -> None:
     Args:
         data: The list to convert to a max-heap.
     """
-    raise NotImplementedError
+    n = len(data)
+    for i in range(n // 2 - 1, -1, -1):
+        _heapify(data, n, i)
+    #raise NotImplementedError
